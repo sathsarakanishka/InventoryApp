@@ -125,6 +125,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="btnUPrice" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnUQuantity" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="btnReset" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jLabel6" max="32767" attributes="0"/>
@@ -157,6 +158,7 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="lblName" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="txtName" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnReset" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -224,7 +226,7 @@
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/GUI/images.jpeg"/>
+                  <Image iconType="2" name="D:\Projects\InventoryApp\InventoryApp\src\main\resources\GUI\images.jpeg"/>
                 </Property>
               </Properties>
             </Component>
@@ -274,6 +276,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGHPActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnReset">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Reset"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnResetActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

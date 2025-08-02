@@ -48,10 +48,31 @@ public class InventoryUI extends javax.swing.JFrame {
     }
     return false;
 }
+    public boolean deleteProduct(int code) {
+    for (int i = 0; i < productCount; i++) {
+        if (products[i].getCode() == code) {
+            for (int j = i; j < productCount - 1; j++) {
+                products[j] = products[j + 1];
+            }
+            products[productCount - 1] = null;
+            productCount--;
+            return true;
+        }
+    }
+    return false;
+}
 
     public Product getProduct(String name) {
     for (int i = 0; i < productCount; i++) {
         if (products[i].getName().equalsIgnoreCase(name)) {
+            return products[i];
+        }
+    }
+    return null;
+}   
+    public Product getProduct(int code) {
+    for (int i = 0; i < productCount; i++) {
+        if (products[i].getCode() == code) {
             return products[i];
         }
     }
@@ -87,7 +108,13 @@ public class InventoryUI extends javax.swing.JFrame {
     }
     return false;
 }
-
+    
+    public void clear(){
+        txtCode.setText("");
+        txtName.setText("");
+        txtQuantity.setText("");
+        txtPrice.setText("");
+    }
 
     public InventoryUI() {
         initComponents();
@@ -120,6 +147,7 @@ public class InventoryUI extends javax.swing.JFrame {
         btnDelete = new javax.swing.JButton();
         btnSearch = new javax.swing.JButton();
         btnGHP = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         jInternalFrame1.setVisible(true);
@@ -156,7 +184,7 @@ public class InventoryUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/images.jpeg"))); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon("D:\\Projects\\InventoryApp\\InventoryApp\\src\\main\\resources\\GUI\\images.jpeg")); // NOI18N
 
         btnUQuantity.setText("Update Quantity");
         btnUQuantity.addActionListener(new java.awt.event.ActionListener() {
@@ -200,6 +228,13 @@ public class InventoryUI extends javax.swing.JFrame {
             }
         });
 
+        btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -222,7 +257,8 @@ public class InventoryUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnUPrice)
-                            .addComponent(btnUQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnUQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnReset))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -247,7 +283,8 @@ public class InventoryUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblName)
-                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnReset))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
@@ -316,26 +353,46 @@ public class InventoryUI extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCodeActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        String name = txtName.getText();
-    if (deleteProduct(name)) {
-        JOptionPane.showMessageDialog(this, "Product deleted successfully!");
-    } else {
-        JOptionPane.showMessageDialog(this, "Product not found!");
-    }
+        String identifier = txtName.getText().trim().isEmpty() ? txtCode.getText().trim() : txtName.getText().trim();
+
+        boolean deleted = false;
+        try {
+            int code = Integer.parseInt(identifier);
+            deleted = deleteProduct(code);
+        } catch (NumberFormatException e) {
+            deleted = deleteProduct(identifier);
+        }
+
+        if (deleted) {
+            clear();
+            JOptionPane.showMessageDialog(this, "Product deleted successfully!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Product not found!");
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        String name = txtName.getText();
-    Product p = getProduct(name);
+         String identifier = txtName.getText().trim().isEmpty() ? txtCode.getText().trim() : txtName.getText().trim();
+        Product p = null;
 
-    if (p != null) {
-        txtCode.setText(String.valueOf(p.getCode()));
-        txtQuantity.setText(String.valueOf(p.getQuantity()));
-        txtPrice.setText(String.valueOf(p.getUnitPrice()));
-        JOptionPane.showMessageDialog(this, "Product found!");
-    } else {
-        JOptionPane.showMessageDialog(this, "Product not found.");
-    }
+        try {
+            int code = Integer.parseInt(identifier);
+            p = getProduct(code);
+        } catch (NumberFormatException e) {
+            p = getProduct(identifier);
+        }
+
+        if (p != null) {
+            JOptionPane.showMessageDialog(this, "Product found!" +
+                "\nCode: " + p.getCode() +
+                "\nName: " + p.getName() +
+                "\nQuantity: " + p.getQuantity() +
+                "\nUnit Price: " + p.getUnitPrice() +
+                "\nTotal Value: " + p.getStockValue());
+                clear();
+        } else {
+            JOptionPane.showMessageDialog(this, "Product not found.");
+        }
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnGHPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGHPActionPerformed
@@ -382,16 +439,28 @@ public class InventoryUI extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         try {
-        int code = Integer.parseInt(txtCode.getText());
-        String name = txtName.getText();
-        int qty = Integer.parseInt(txtQuantity.getText());
-        double price = Double.parseDouble(txtPrice.getText());
+            int code = Integer.parseInt(txtCode.getText());
+            String name = txtName.getText();
+            int quantity = Integer.parseInt(txtQuantity.getText());
+            double unitPrice = Double.parseDouble(txtPrice.getText());
 
-        addProduct(code, name, qty, price);
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Please enter valid values!");
+            addProduct(code, name, quantity, unitPrice);
+            txtCode.setText("");
+            txtName.setText("");
+            txtQuantity.setText("");
+            txtPrice.setText("");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter valid values!");
         }
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        txtCode.setText("");
+        txtName.setText("");
+        txtQuantity.setText("");
+        txtPrice.setText("");
+        JOptionPane.showMessageDialog(this, "Cleared");
+    }//GEN-LAST:event_btnResetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -405,6 +474,7 @@ public class InventoryUI extends javax.swing.JFrame {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnGHP;
+    private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUPrice;
     private javax.swing.JButton btnUQuantity;
